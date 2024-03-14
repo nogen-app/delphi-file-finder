@@ -1,0 +1,7 @@
+*.delphilsp.json
+*.local
+*.identcache
+*.res
+Win32/*
+__history/*
+Src/__history/*
