@@ -11,7 +11,7 @@ type
   public
     class function TrigramIndex(const s: string): TList<string>;
     class function LevenshteinDistance(const s1, s2: string): Integer;
-    class function FuzzySearch(const pattern: string; const fileList: TStringDynArray; tolerance: Integer): TList<string>;
+    class function FuzzySearch(const pattern: string; const fileList: TStrings; tolerance: Integer): TStringList;
   end;
 
  implementation
@@ -59,18 +59,19 @@ begin
 end;
 
 
-class function TFuzzySearch.FuzzySearch(const pattern: string; const fileList: TStringDynArray; tolerance: Integer): TList<string>;
+class function TFuzzySearch.FuzzySearch(const pattern: string; const fileList: TStrings; tolerance: Integer): TStringList;
 var
-  i, j: Integer;
+  j: Integer;
   patternIndex: TList<string>;
   fileIndex: TDictionary<string, TList<string>>;
 begin
   patternIndex := TrigramIndex(pattern);
   fileIndex := TDictionary<string, TList<string>>.Create;
-  Result := TList<string>.Create;
+  Result := TStringList.Create;
+  Result.OwnsObjects := False;
 
   // Build trigram index for file names
-  for i := Low(fileList) to High(fileList) do
+  for var i := 0 to fileList.Count-1 do
   begin
   //TODO: Dont like this being a check here, it should already be removed from the list before it gets here
     if not fileIndex.ContainsKey(fileList[i]) then
@@ -78,7 +79,7 @@ begin
   end;
 
   // Search through trigram index for matches
-  for i := Low(fileList) to High(fileList) do
+  for var i := 0 to fileList.Count-1 do
   begin
     var fileTrigrams := fileIndex[fileList[i]];
     var intersectionCount := 0;
@@ -88,7 +89,7 @@ begin
         Inc(intersectionCount);
     end;
     if intersectionCount >= tolerance then
-      Result.Add(fileList[i]);
+      Result.AddObject(fileList[i], fileList.Objects[i]);;
   end;
 
   fileIndex.Free;

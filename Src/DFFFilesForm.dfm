@@ -11,14 +11,6 @@ object frmDFFFiles: TfrmDFFFiles
   Font.Name = 'Segoe UI'
   Font.Style = []
   TextHeight = 15
-  object mmo1: TMemo
-    Left = 0
-    Top = 0
-    Width = 624
-    Height = 414
-    Align = alClient
-    TabOrder = 0
-  end
   object pnl1: TPanel
     Left = 0
     Top = 414
@@ -26,7 +18,7 @@ object frmDFFFiles: TfrmDFFFiles
     Height = 27
     Align = alBottom
     Caption = 'pnl1'
-    TabOrder = 1
+    TabOrder = 0
     object edtSearch: TEdit
       Left = 1
       Top = 1
@@ -36,6 +28,7 @@ object frmDFFFiles: TfrmDFFFiles
       TabOrder = 0
       Text = 'edtSearch'
       OnChange = edtSearchChange
+      OnKeyUp = edtSearchKeyUp
       ExplicitHeight = 23
     end
     object seTolerance: TSpinEdit
@@ -49,5 +42,16 @@ object frmDFFFiles: TfrmDFFFiles
       TabOrder = 1
       Value = 3
     end
+  end
+  object lstFiles: TListBox
+    Left = 0
+    Top = 0
+    Width = 624
+    Height = 414
+    Align = alClient
+    ItemHeight = 15
+    TabOrder = 1
+    OnDblClick = lstFilesDblClick
+    OnKeyUp = lstFilesKeyUp
   end
 end

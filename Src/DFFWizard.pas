@@ -34,7 +34,8 @@ var
 implementation
 
 uses
-  DFFFilesForm, System.IOUtils;
+  DFFFilesForm, System.IOUtils,
+  Vcl.Controls;
 
 { TDFFWizard }
 
@@ -80,6 +81,7 @@ begin
     var lProject := GetActiveProject;
 
     var lFiles := TStringList.Create;
+    lFiles.OwnsObjects := True;
 
     var lTmpFiles := TStringList.Create;
     lProject.GetCompleteFileList(lTmpFiles);
@@ -113,7 +115,14 @@ begin
 
     var lForm := TfrmDFFFiles.Create(nil);
     lForm.SetFiles(lFiles);
-    lForm.ShowModal;
+    if lForm.ShowModal = mrOK then
+    begin
+      var lActionService :IOTAActionServices;
+      if Supports(BorlandIDEServices, IOTAActionServices, lActionService) then
+      begin
+        lActionService.OpenFile(lForm.SelectedFile);
+      end;
+    end;
     FreeAndNil(lForm);
     FreeAndNil(lFiles);
     Handled := True;
