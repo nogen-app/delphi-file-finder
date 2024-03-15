@@ -5,40 +5,21 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
-  Vcl.Samples.Spin, Vcl.FileCtrl;
+  Vcl.Samples.Spin, Vcl.FileCtrl, ToolsAPI, ToolsAPI.UI,
+  DockableForm, FilesFrame;
 
 type
-  TStrObj = class(TObject)
-    strict private
-      FValue: string;
-    public
-      constructor Create(aValue:string);
-
-      property Value: string read FValue write FValue;
-  end;
-
-  TfrmDFFFiles = class(TForm)
-    edtSearch: TEdit;
-    seTolerance: TSpinEdit;
-    pnl1: TPanel;
-    lstFiles: TListBox;
-    procedure edtSearchChange(Sender: TObject);
-    procedure lstFilesDblClick(Sender: TObject);
-    procedure edtSearchKeyUp(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure lstFilesKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+  TfrmDFFFiles = class(TfrmDockableForm, INTACustomDockableForm)
   private
-    { Private declarations }
-    FFiles: TStringList;
-    FSelectedFile: TFileName;
+    FFrame: TfrmFilesFrame;
+  public //INTACustomDockableForm
+    function GetCaption: string; override;
+    function GetIdentifier: string; override;
+    function GetFrameClass: TCustomFrameClass; override;
+    procedure FrameCreated(AFrame: TCustomFrame); override;
 
-    procedure DoFuzzySearch(aSearchInput: string);
-    procedure OpenSelectedFile;
-  public
-    { Public declarations }
-    procedure SetFiles(aFiles: TStringList);
+    property Frame: TfrmFilesFrame read FFrame write FFrame;
 
-    property SelectedFile: TFileName read FSelectedFile write FSelectedFile;
   end;
 
 implementation
@@ -55,75 +36,28 @@ uses
 // 2. Let the user select the file, and enter to open
 // 3. Let the user press escape to exit the form
 
-procedure TfrmDFFFiles.DoFuzzySearch(aSearchInput: string);
+procedure TfrmDFFFiles.FrameCreated(AFrame: TCustomFrame);
 begin
-  var lMatches := TFuzzySearch.FuzzySearch(aSearchInput, FFiles, seTolerance.Value);
-
-  lstFiles.Clear;
-  var idx: Integer := 0;
-  for var lFile in lMatches do
-  begin
-    lstFiles.AddItem(lFile, lMatches.Objects[idx]);
-    Inc(idx);
-  end;
-
-  if lstFiles.Count > 0 then
-    lstFiles.Selected[0] := True;
+  inherited;
+  FFrame := aFrame as TfrmFilesFrame;
+  AFrame.Align := alClient;
+  InsertControl(AFrame);
 end;
 
-procedure TfrmDFFFiles.edtSearchChange(Sender: TObject);
+function TfrmDFFFiles.GetCaption: string;
 begin
-  DoFuzzySearch(edtSearch.Text);
+  Result := 'Files';
 end;
 
-procedure TfrmDFFFiles.edtSearchKeyUp(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
+function TfrmDFFFiles.GetFrameClass: TCustomFrameClass;
 begin
-  if Key = VK_RETURN then
-    OpenSelectedFile;
-
-  if Key = VK_ESCAPE then
-    ModalResult := mrCancel;
+  Result := TfrmFilesFrame;
 end;
 
-procedure TfrmDFFFiles.lstFilesDblClick(Sender: TObject);
+function TfrmDFFFiles.GetIdentifier: string;
 begin
-  OpenSelectedFile;
+  Result := 'nogen_files_finder';
 end;
 
-procedure TfrmDFFFiles.lstFilesKeyUp(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  if Key = VK_RETURN then
-    OpenSelectedFile;
-
-  if Key = VK_ESCAPE then
-    ModalResult := mrCancel;
-end;
-
-procedure TfrmDFFFiles.OpenSelectedFile;
-begin
-  FSelectedFile := TStrObj(lstFiles.Items.Objects[lstFiles.ItemIndex]).Value;
-  ModalResult := mrOk;
-end;
-
-procedure TfrmDFFFiles.SetFiles(aFiles: TStringList);
-begin
-  FFiles := aFiles;
-
-  var idx: Integer := 0;
-  for var lFile in aFiles do
-  begin
-    lstFiles.AddItem(lFile, aFiles.Objects[idx]);
-    Inc(idx);
-  end;
-end;
-
-{ TStrObj }
-
-constructor TStrObj.Create(aValue: string);
-begin
-  FValue := aValue;
-end;
 
 end.

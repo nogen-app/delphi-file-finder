@@ -121,6 +121,20 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Src\FuzzySearch.pas"/>
+        <DCCReference Include="Src\DockableForm.pas">
+            <Form>frmDockableForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Src\FilesFrame.pas">
+            <Form>frmFilesFrame</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Src\Helpers.pas"/>
+        <RcItem Include="nogen.bmp">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>nogen_SplashScreen_icon</ResourceId>
+        </RcItem>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

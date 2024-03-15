@@ -6,15 +6,10 @@ uses
   Classes, System.SysUtils, ToolsAPI, Vcl.AppEvnts,
   Vcl.Forms, Winapi.Windows, Winapi.Messages;
 
-
 type
-
-
 
   TDFFWizard = class(TNotifierObject, IOTAWizard, IOTAKeyboardBinding)
   private
-    FEvents: TApplicationEvents;
-
     function GetBindingType: TBindingType;
     function GetDisplayName: string;
 
@@ -42,7 +37,7 @@ implementation
 
 uses
   DFFFilesForm, System.IOUtils,
-  Vcl.Controls, Vcl.Menus;
+  Vcl.Controls, Vcl.Menus, Helpers;
 
 { TDFFWizard }
 
@@ -126,18 +121,13 @@ begin
     end;
   end;
 
-  var lForm := TfrmDFFFiles.Create(nil);
-  lForm.SetFiles(lFiles);
-  if lForm.ShowModal = mrOK then
+  var lNTAServices: INTAServices;
+  if Supports(BorlandIDEServices, INTAServices, lNTAServices) then
   begin
-    var lActionService :IOTAActionServices;
-    if Supports(BorlandIDEServices, IOTAActionServices, lActionService) then
-    begin
-      lActionService.OpenFile(lForm.SelectedFile);
-    end;
+    var lForm := TfrmDFFFiles.Create(nil);
+    lNTAServices.CreateDockableForm(lForm);
+    lForm.Frame.SetFiles(lFiles);
   end;
-  FreeAndNil(lForm);
-  FreeAndNil(lFiles);
 end;
 
 end.

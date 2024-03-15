@@ -3,7 +3,7 @@ unit DLLEntry;
 interface
 
 uses
-  SysUtils, ToolsAPI, DFFWizard;
+  SysUtils, ToolsAPI, DFFWizard, System.Classes, Winapi.Windows, vcl.Graphics;
 
 function InitWizard(const BorlandIDEServices: IBorlandIDEServices;
   RegisterProc: TWizardRegisterProc; var Terminate: TWizardTerminateProc): Boolean; stdcall;
@@ -20,6 +20,16 @@ const
 
 var
   FWizardIndex: Integer = InvalidIndex;
+
+procedure AddSplashScreenInfo;
+begin
+  if Assigned(SplashScreenServices) then
+  begin
+    var lIcon := LoadBitmap(HInstance, 'nogen_SplashScreen_icon');
+
+    SplashScreenServices.AddProductBitmap('nogen V1.0', lIcon);
+  end;
+end;
 
 procedure FinalizeWizard;
 var
@@ -59,10 +69,12 @@ begin
 
     RegisterKeyBinds(BorlandIDEServices, DFFWiz);
 
-
     FWizardIndex := WizardServices.AddWizard(DFFWiz as IOTAWizard);
     Result := (FWizardIndex >= 0);
   end;
 end;
+
+initialization
+  AddSplashScreenInfo;
 
 end.

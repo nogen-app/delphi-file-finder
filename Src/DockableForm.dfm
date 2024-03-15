@@ -1,7 +1,7 @@
-object frmDFFFiles: TfrmDFFFiles
+object frmDockableForm: TfrmDockableForm
   Left = 0
   Top = 0
-  Caption = 'frmDFFFiles'
+  Caption = 'frmDockableForm'
   ClientHeight = 441
   ClientWidth = 624
   Color = clBtnFace

@@ -15,13 +15,20 @@ library DFF_Athens;
   any unit initialization section, then Vcl.WicImageInit must be
   included into your library's USES clause. }
 
+
+
+{$R *.dres}
+
 uses
   System.SysUtils,
   System.Classes,
   DLLEntry in 'Src\DLLEntry.pas',
   DFFWizard in 'Src\DFFWizard.pas',
   DFFFilesForm in 'Src\DFFFilesForm.pas' {frmDFFFiles},
-  FuzzySearch in 'Src\FuzzySearch.pas';
+  FuzzySearch in 'Src\FuzzySearch.pas',
+  DockableForm in 'Src\DockableForm.pas' {frmDockableForm},
+  FilesFrame in 'Src\FilesFrame.pas' {frmFilesFrame: TFrame},
+  Helpers in 'Src\Helpers.pas';
 
 {$R *.res}
 
