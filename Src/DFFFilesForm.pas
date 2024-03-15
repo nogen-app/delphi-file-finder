@@ -31,11 +31,6 @@ uses
 
 { TfrmDFFFiles }
 
-//TODO:
-// 1. Make sure the design matches delphi
-// 2. Let the user select the file, and enter to open
-// 3. Let the user press escape to exit the form
-
 procedure TfrmDFFFiles.FrameCreated(AFrame: TCustomFrame);
 begin
   inherited;

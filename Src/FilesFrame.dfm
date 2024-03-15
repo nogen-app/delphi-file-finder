@@ -14,8 +14,6 @@ object frmFilesFrame: TfrmFilesFrame
     TabOrder = 0
     OnDblClick = lstFilesDblClick
     OnKeyUp = lstFilesKeyUp
-    ExplicitWidth = 624
-    ExplicitHeight = 414
   end
   object pnl1: TPanel
     Left = 0
@@ -25,8 +23,6 @@ object frmFilesFrame: TfrmFilesFrame
     Align = alBottom
     Caption = 'pnl1'
     TabOrder = 1
-    ExplicitTop = 414
-    ExplicitWidth = 624
     object edtSearch: TEdit
       Left = 1
       Top = 1
@@ -37,7 +33,6 @@ object frmFilesFrame: TfrmFilesFrame
       Text = 'edtSearch'
       OnChange = edtSearchChange
       OnKeyUp = edtSearchKeyUp
-      ExplicitWidth = 567
       ExplicitHeight = 23
     end
     object seTolerance: TSpinEdit
@@ -50,7 +45,6 @@ object frmFilesFrame: TfrmFilesFrame
       MinValue = 0
       TabOrder = 1
       Value = 3
-      ExplicitLeft = 568
     end
   end
 end

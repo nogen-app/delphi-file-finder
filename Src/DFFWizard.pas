@@ -84,9 +84,11 @@ end;
 procedure TDFFWizard.ShowForm(const Context: IOTAKeyContext; KeyCode: TShortcut;
     var BindingResult: TKeyBindingResult);
 begin
-  //TODO: The finding and ranking of files should be done in a BG thread,
-  // so all that needs to happen when they press the button is showing the GUI
+  //TODO:
+  //1. The finding and ranking of files should be done in a BG thread,
+  //2. Fine tune the fuzzy files finder
   var lProject := GetActiveProject;
+  var lProjectPath := ExtractFilePath(lProject.FileName);
 
   var lFiles := TStringList.Create;
   lFiles.OwnsObjects := True;
@@ -96,7 +98,12 @@ begin
 
   for var lFile in lTmpFiles do
   begin
-    lFiles.AddObject(TPath.GetFileNameWithoutExtension(lFile), TStrObj.Create(lFile));
+    if ExtractFileExt(lFile) = '.pas' then
+    begin
+      var lRelativePath := ExtractRelativePath(lProjectPath, lFile);
+      if not lFiles.ContainsName(lRelativePath) then
+        lFiles.AddObject(TPath.Combine(lRelativePath,TPath.GetFileNameWithoutExtension(lFile)), TStrObj.Create(lFile));
+    end;
   end;
 
   var lSearchUnits := TStringList.Create;
@@ -108,15 +115,16 @@ begin
   for var lSearchUnit in lSearchUnits do
   begin
     var lPath :TFileName;
-    var lFolder := ExtractFilePath(lProject.FileName);
 
-    lPath := TPath.GetFullPath(TPath.Combine(lFolder, lSearchUnit));
+    lPath := TPath.GetFullPath(TPath.Combine(lProjectPath, lSearchUnit));
 
     if TDirectory.Exists(lPath) then
     begin
       for var lFile in TDirectory.GetFiles(lPath, '*.pas') do
       begin
-        lFiles.AddObject(TPath.GetFileNameWithoutExtension(lFile), TStrObj.Create(lFile));
+        var lRelativePath := ExtractRelativePath(lProjectPath, lFile);
+        if not lFiles.ContainsName(lRelativePath) then
+          lFiles.AddObject(TPath.Combine(lRelativePath,TPath.GetFileNameWithoutExtension(lFile)), TStrObj.Create(lFile));
       end;
     end;
   end;

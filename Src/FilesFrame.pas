@@ -41,6 +41,8 @@ uses
 
 {$R *.dfm}
 
+//TODO: Show what parts of the string it matched on
+
 procedure TfrmFilesFrame.DoFuzzySearch(aSearchInput: string);
 begin
   var lMatches := TFuzzySearch.FuzzySearch(aSearchInput, FFiles, seTolerance.Value);
