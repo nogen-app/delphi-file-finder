@@ -3,14 +3,15 @@ unit FilesIndexingThread;
 interface
 
 uses
-  ToolsAPI, System.Classes, System.SyncObjs, System.Generics.Collections,
-  Helpers;
+  ToolsAPI,
+  System.SysUtils,
+  System.Classes, System.SyncObjs, System.Generics.Collections;
 
 type
   TFilesIndexingThread = class(TThread)
     private
-      FFiles: TThreadList<TFileObj>;
       FEvent: TEvent;
+      FCallback: TProc<TList<string>>;
 
       procedure IndexFiles;
 
@@ -18,20 +19,21 @@ type
     protected
       procedure Execute; override;
     public
-      constructor Create(aFiles: TThreadList<TFileObj>);
+      constructor Create(aDoneIndexingCallback: TProc<TList<string>>);
   end;
 
 implementation
 
 uses
-  System.SysUtils, System.IOUtils;
+  System.IOUtils;
 
 { TFilesIndexingThread }
 
-constructor TFilesIndexingThread.Create(aFiles: TThreadList<TFileObj>);
+constructor TFilesIndexingThread.Create(aDoneIndexingCallback: TProc<TList<string>>);
 begin
   inherited Create(True);
-  FFiles := aFiles;
+  FCallback := aDoneIndexingCallback;
+
   FEvent := TEvent.Create(nil, true, False, '');
 end;
 
@@ -79,7 +81,7 @@ begin
 
   var lProjectPath := ExtractFilePath(lProject.FileName);
 
-  var lFiles := TDictionary<string, string>.Create;
+  var lFiles := TList<string>.Create;
 
   var lTmpFiles := TStringList.Create;
   lProject.GetCompleteFileList(lTmpFiles);
@@ -89,8 +91,8 @@ begin
     if ExtractFileExt(lFile) = '.pas' then
     begin
       var lRelativePath := ExtractRelativePath(lProjectPath, lFile);
-      if not lFiles.ContainsKey(lRelativePath) then
-        lFiles.Add(lRelativePath, lFile);
+      if not lFiles.Contains(lRelativePath) then
+        lFiles.Add(lRelativePath);
     end;
   end;
 
@@ -113,24 +115,21 @@ begin
       for var lFile in TDirectory.GetFiles(lPath, '*.pas') do
       begin
         var lRelativePath := ExtractRelativePath(lProjectPath, lFile);
-        if not lFiles.ContainsKey(lRelativePath) then
-          lFiles.Add(lRelativePath, lFile);
+        if not lFiles.Contains(lRelativePath) then
+          lFiles.Add(lRelativePath);
       end;
     end;
   end;
 
-  var lThreadList := FFiles.LockList;
-  try
-    for var lFilePair in lFiles do
+  //TODO: Should only call if there are any new files.
+  if Assigned(FCallback) then
+  begin
+    Synchronize(procedure
     begin
-      var lFileObj := TFileObj.Create(lFilePair.Value, lFilePair.Key);
-      lThreadList.Add(lFileObj);
-    end;
-  finally
-    FFiles.UnlockList;
+      FCallback(lFiles);
+      FreeAndNil(lFiles);
+    end);
   end;
-
-  FreeAndNil(lFiles);
 end;
 
 end.

@@ -11,7 +11,7 @@ type
   public
     class function TrigramIndex(const s: string): TList<string>;
     class function LevenshteinDistance(const s1, s2: string): Integer;
-    class function FuzzySearch(const pattern: string; const fileList: TStrings; tolerance: Integer): TStringList;
+    class function FuzzySearch(const pattern: string; const fileList: TList<string>; tolerance: Integer): TList<string>;
   end;
 
  implementation
@@ -59,7 +59,7 @@ begin
 end;
 
 
-class function TFuzzySearch.FuzzySearch(const pattern: string; const fileList: TStrings; tolerance: Integer): TStringList;
+class function TFuzzySearch.FuzzySearch(const pattern: string; const fileList: TList<string>; tolerance: Integer): TList<string>;
 var
   j: Integer;
   patternIndex: TList<string>;
@@ -67,13 +67,11 @@ var
 begin
   patternIndex := TrigramIndex(pattern);
   fileIndex := TDictionary<string, TList<string>>.Create;
-  Result := TStringList.Create;
-  Result.OwnsObjects := False;
+  Result := TList<string>.Create;
 
   // Build trigram index for file names
   for var i := 0 to fileList.Count-1 do
   begin
-    //TODO: Dont like this being a check here, it should already be removed from the list before it gets here
     if not fileIndex.ContainsKey(fileList[i]) then
       fileIndex.Add(fileList[i], TrigramIndex(fileList[i]));
   end;
@@ -89,13 +87,17 @@ begin
         Inc(intersectionCount);
     end;
     if intersectionCount >= tolerance then
-      Result.AddObject(fileList[i], fileList.Objects[i]);;
+    begin
+      if not Result.Contains(fileList[i]) then
+        Result.Add(fileList[i]);
+    end;
   end;
 
   fileIndex.Free;
   patternIndex.Free;
 
   //TODO: Should also order it based on matches cause right now its still kinda weird
+  //TODO: Something couuld also be done to fine tune it a bit, the algorithm is not quite working as well as i want it to
 end;
 
 end.

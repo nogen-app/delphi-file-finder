@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Samples.Spin,
   Vcl.StdCtrls, Vcl.ExtCtrls, ToolsAPI,
-  System.Generics.Collections, Helpers;
+  System.Generics.Collections;
 
 type
   TfrmFilesFrame = class(TFrame)
@@ -21,17 +21,16 @@ type
     procedure edtSearchChange(Sender: TObject);
   private
     { Private declarations }
-    FFiles: TStringList;
+    FFiles: TList<string>;
     FOnEscCalled: TNotifyEvent;
 
     procedure DoFuzzySearch(aSearchInput: string);
     procedure OpenSelectedFile;
   public
     { Public declarations }
-    constructor Create(AOwner: TComponent); override;
+    constructor Create(aOwner: TComponent); override;
 
-
-    procedure SetFiles(aFiles: TThreadList<TFileObj>);
+    procedure SetFiles(aFiles: TList<string>);
 
     property OnEscCalled: TNotifyEvent read FOnEscCalled write FOnEscCalled;
 
@@ -45,27 +44,31 @@ uses
 {$R *.dfm}
 
 //TODO: Show what parts of the string it matched on
-
-constructor TfrmFilesFrame.Create(AOwner: TComponent);
+constructor TfrmFilesFrame.Create(aOwner: TComponent);
 begin
   inherited;
-  FFiles := TStringList.Create;
+  FFiles := TList<string>.Create;
 end;
 
 procedure TfrmFilesFrame.DoFuzzySearch(aSearchInput: string);
 begin
-  var lMatches := TFuzzySearch.FuzzySearch(aSearchInput, FFiles, seTolerance.Value);
-
-  lstFiles.Clear;
-  var idx: Integer := 0;
-  for var lFile in lMatches do
+  //Should only search if something has been entered, otherwise we show all files
+  if aSearchInput <> '' then
   begin
-    lstFiles.AddItem(lFile, lMatches.Objects[idx]);
-    Inc(idx);
-  end;
+    var lMatches := TFuzzySearch.FuzzySearch(aSearchInput, FFiles, seTolerance.Value);
 
-  if lstFiles.Count > 0 then
-    lstFiles.Selected[0] := True;
+    lstFiles.Clear;
+    for var lFile in lMatches do
+      lstFiles.AddItem(lFile, nil);
+
+    if lstFiles.Count > 0 then
+      lstFiles.Selected[0] := True;
+  end else
+  begin
+    lstFiles.Clear;
+    for var lFile in FFiles do
+      lstFiles.AddItem(lFile, nil);
+  end;
 end;
 
 procedure TfrmFilesFrame.edtSearchChange(Sender: TObject);
@@ -111,20 +114,22 @@ begin
   end;
 end;
 
-procedure TfrmFilesFrame.SetFiles(aFiles: TThreadList<TFileObj>);
+procedure TfrmFilesFrame.SetFiles(aFiles: TList<string>);
 begin
   FFiles.Clear;
-
-  var lThreadFiles := aFiles.LockList;
-  try
-    for var lThreadFile in lThreadFiles do
-    begin
-      FFiles.Add(lThreadFile.RelativePath);
-      lstFiles.AddItem(lThreadFile.RelativePath, nil);
-    end;
-  finally
-    aFiles.UnlockList;
+  for var lFile in aFiles do
+  begin
+    FFiles.Add(lFile);
   end;
+
+  lstFiles.Clear;
+
+  for var lFile in FFiles do
+  begin
+    lstFiles.AddItem(lFile, nil);
+  end;
+
+  DoFuzzySearch(edtSearch.Text);
 end;
 
 end.

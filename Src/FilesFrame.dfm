@@ -30,7 +30,6 @@ object frmFilesFrame: TfrmFilesFrame
       Height = 25
       Align = alClient
       TabOrder = 0
-      Text = 'edtSearch'
       OnChange = edtSearchChange
       OnKeyUp = edtSearchKeyUp
       ExplicitHeight = 23

@@ -5,15 +5,16 @@ interface
 uses
   Classes, System.SysUtils, ToolsAPI, Vcl.AppEvnts,
   Vcl.Forms, Winapi.Windows, Winapi.Messages, FilesIndexingThread,
-  System.Generics.Collections, Helpers;
+  System.Generics.Collections, DFFFilesForm;
 
 type
 
   TDFFWizard = class(TNotifierObject, IOTAWizard, IOTAKeyboardBinding)
   private
-    FFiles: TThreadList<TFileObj>;
     FFilesIndexingThread: TFilesIndexingThread;
+    FForm: TfrmDFFFiles;
 
+    procedure DoNewFilesIndexed(aFiles: TList<string>);
 
     function GetBindingType: TBindingType;
     function GetDisplayName: string;
@@ -41,10 +42,13 @@ var
 implementation
 
 uses
-  DFFFilesForm, System.IOUtils,
+  System.IOUtils,
   Vcl.Controls, Vcl.Menus;
 
 { TDFFWizard }
+
+  //TODO: Should register the frame, so it can be saved in the layout
+  //TODO: Should add a menu item, with a settings wheel, so people can change the hotkey
 
 procedure TDFFWizard.BindKeyboard(
   const BindingServices: IOTAKeyBindingServices);
@@ -54,11 +58,14 @@ end;
 
 constructor TDFFWizard.Create;
 begin
-  FFiles := TThreadList<TFileObj>.Create;
-  FFiles.Duplicates := TDuplicates.dupIgnore;
-
-  FFilesIndexingThread := TFilesIndexingThread.Create(FFiles);
+  FFilesIndexingThread := TFilesIndexingThread.Create(DoNewFilesIndexed);
   FFilesIndexingThread.Start;
+end;
+
+procedure TDFFWizard.DoNewFilesIndexed(aFiles: TList<string>);
+begin
+  if Assigned(FForm) then
+    FForm.Frame.SetFiles(aFiles);
 end;
 
 procedure TDFFWizard.Execute;
@@ -93,15 +100,16 @@ end;
 procedure TDFFWizard.ShowForm(const Context: IOTAKeyContext; KeyCode: TShortcut;
     var BindingResult: TKeyBindingResult);
 begin
-  //TODO:
-  //1. Fine tune the fuzzy files finder
+  //TODO: Set the frame in focus, if the hotkey is pressed, while frame is active
 
   var lNTAServices: INTAServices;
   if Supports(BorlandIDEServices, INTAServices, lNTAServices) then
   begin
-    var lForm := TfrmDFFFiles.Create(nil);
-    lNTAServices.CreateDockableForm(lForm);
-    lForm.Frame.SetFiles(FFiles);
+    if not Assigned(FForm) then
+    begin
+      FForm := TfrmDFFFiles.Create(nil);
+      lNTAServices.CreateDockableForm(FForm);
+    end;
   end;
 end;
 
