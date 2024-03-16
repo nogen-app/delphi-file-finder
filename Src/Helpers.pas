@@ -4,22 +4,25 @@ interface
 
 type
 
-  TStrObj = class(TObject)
-    strict private
-      FValue: string;
+  TFileObj = class(TObject)
+    private
+      FRelativePath: string;
+      FFullPath: string;
     public
-      constructor Create(aValue:string);
+      constructor Create(aFullPath, aRelativePath: string);
 
-      property Value: string read FValue write FValue;
+      property RelativePath: string read FRelativePath write FRelativePath;
+      property FullPath: string read FFullPath write FFullPath;
   end;
 
 implementation
 
-{ TStrObj }
+{ TFileObj }
 
-constructor TStrObj.Create(aValue: string);
+constructor TFileObj.Create(aFullPath, aRelativePath: string);
 begin
-  FValue := aValue;
+  FFullPath := aFullPath;
+  FRelativePath := aRelativePath;
 end;
 
 end.

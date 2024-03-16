@@ -131,6 +131,7 @@
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Src\Helpers.pas"/>
+        <DCCReference Include="Src\FilesIndexingThread.pas"/>
         <RcItem Include="nogen.bmp">
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>nogen_SplashScreen_icon</ResourceId>

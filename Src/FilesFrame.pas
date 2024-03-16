@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Samples.Spin,
-  Vcl.StdCtrls, Vcl.ExtCtrls, ToolsAPI;
+  Vcl.StdCtrls, Vcl.ExtCtrls, ToolsAPI,
+  System.Generics.Collections, Helpers;
 
 type
   TfrmFilesFrame = class(TFrame)
@@ -27,8 +28,10 @@ type
     procedure OpenSelectedFile;
   public
     { Public declarations }
+    constructor Create(AOwner: TComponent); override;
 
-    procedure SetFiles(aFiles: TStringList);
+
+    procedure SetFiles(aFiles: TThreadList<TFileObj>);
 
     property OnEscCalled: TNotifyEvent read FOnEscCalled write FOnEscCalled;
 
@@ -37,11 +40,17 @@ type
 implementation
 
 uses
-  FuzzySearch, Helpers;
+  FuzzySearch, System.IOUtils;
 
 {$R *.dfm}
 
 //TODO: Show what parts of the string it matched on
+
+constructor TfrmFilesFrame.Create(AOwner: TComponent);
+begin
+  inherited;
+  FFiles := TStringList.Create;
+end;
 
 procedure TfrmFilesFrame.DoFuzzySearch(aSearchInput: string);
 begin
@@ -91,7 +100,9 @@ end;
 
 procedure TfrmFilesFrame.OpenSelectedFile;
 begin
-  var lSelectedFile := TStrObj(lstFiles.Items.Objects[lstFiles.ItemIndex]).Value;
+  var lSelectedFile := lstFiles.Items[lstFiles.ItemIndex];
+  var lRootPath := ExtractFilePath(GetActiveProject.FileName);
+  lSelectedFile := TPath.GetFullPath(TPath.Combine(lRootPath, lSelectedFile)); 
 
   var lActionService: IOTAActionServices;
   if Supports(BorlandIDEServices, IOTAActionServices, lActionService) then
@@ -100,15 +111,19 @@ begin
   end;
 end;
 
-procedure TfrmFilesFrame.SetFiles(aFiles: TStringList);
+procedure TfrmFilesFrame.SetFiles(aFiles: TThreadList<TFileObj>);
 begin
-  FFiles := aFiles;
+  FFiles.Clear;
 
-  var idx: Integer := 0;
-  for var lFile in aFiles do
-  begin
-    lstFiles.AddItem(lFile, aFiles.Objects[idx]);
-    Inc(idx);
+  var lThreadFiles := aFiles.LockList;
+  try
+    for var lThreadFile in lThreadFiles do
+    begin
+      FFiles.Add(lThreadFile.RelativePath);
+      lstFiles.AddItem(lThreadFile.RelativePath, nil);
+    end;
+  finally
+    aFiles.UnlockList;
   end;
 end;
 

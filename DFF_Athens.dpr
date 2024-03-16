@@ -28,7 +28,8 @@ uses
   FuzzySearch in 'Src\FuzzySearch.pas',
   DockableForm in 'Src\DockableForm.pas' {frmDockableForm},
   FilesFrame in 'Src\FilesFrame.pas' {frmFilesFrame: TFrame},
-  Helpers in 'Src\Helpers.pas';
+  Helpers in 'Src\Helpers.pas',
+  FilesIndexingThread in 'Src\FilesIndexingThread.pas';
 
 {$R *.res}
 

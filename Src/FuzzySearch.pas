@@ -73,9 +73,9 @@ begin
   // Build trigram index for file names
   for var i := 0 to fileList.Count-1 do
   begin
-  //TODO: Dont like this being a check here, it should already be removed from the list before it gets here
+    //TODO: Dont like this being a check here, it should already be removed from the list before it gets here
     if not fileIndex.ContainsKey(fileList[i]) then
-      fileIndex.Add(fileList[i], TrigramIndex(ExtractFileName(fileList[i])));
+      fileIndex.Add(fileList[i], TrigramIndex(fileList[i]));
   end;
 
   // Search through trigram index for matches

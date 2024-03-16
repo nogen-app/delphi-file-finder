@@ -4,12 +4,17 @@ interface
 
 uses
   Classes, System.SysUtils, ToolsAPI, Vcl.AppEvnts,
-  Vcl.Forms, Winapi.Windows, Winapi.Messages;
+  Vcl.Forms, Winapi.Windows, Winapi.Messages, FilesIndexingThread,
+  System.Generics.Collections, Helpers;
 
 type
 
   TDFFWizard = class(TNotifierObject, IOTAWizard, IOTAKeyboardBinding)
   private
+    FFiles: TThreadList<TFileObj>;
+    FFilesIndexingThread: TFilesIndexingThread;
+
+
     function GetBindingType: TBindingType;
     function GetDisplayName: string;
 
@@ -37,7 +42,7 @@ implementation
 
 uses
   DFFFilesForm, System.IOUtils,
-  Vcl.Controls, Vcl.Menus, Helpers;
+  Vcl.Controls, Vcl.Menus;
 
 { TDFFWizard }
 
@@ -49,11 +54,15 @@ end;
 
 constructor TDFFWizard.Create;
 begin
+  FFiles := TThreadList<TFileObj>.Create;
+  FFiles.Duplicates := TDuplicates.dupIgnore;
+
+  FFilesIndexingThread := TFilesIndexingThread.Create(FFiles);
+  FFilesIndexingThread.Start;
 end;
 
 procedure TDFFWizard.Execute;
 begin
-
 end;
 
 function TDFFWizard.GetBindingType: TBindingType;
@@ -85,56 +94,14 @@ procedure TDFFWizard.ShowForm(const Context: IOTAKeyContext; KeyCode: TShortcut;
     var BindingResult: TKeyBindingResult);
 begin
   //TODO:
-  //1. The finding and ranking of files should be done in a BG thread,
-  //2. Fine tune the fuzzy files finder
-  var lProject := GetActiveProject;
-  var lProjectPath := ExtractFilePath(lProject.FileName);
-
-  var lFiles := TStringList.Create;
-  lFiles.OwnsObjects := True;
-
-  var lTmpFiles := TStringList.Create;
-  lProject.GetCompleteFileList(lTmpFiles);
-
-  for var lFile in lTmpFiles do
-  begin
-    if ExtractFileExt(lFile) = '.pas' then
-    begin
-      var lRelativePath := ExtractRelativePath(lProjectPath, lFile);
-      if not lFiles.ContainsName(lRelativePath) then
-        lFiles.AddObject(TPath.Combine(lRelativePath,TPath.GetFileNameWithoutExtension(lFile)), TStrObj.Create(lFile));
-    end;
-  end;
-
-  var lSearchUnits := TStringList.Create;
-  var lConf := lProject.ProjectOptions as IOTAProjectOptionsConfigurations;
-
-  var lPlatform := lConf.ActiveConfiguration;
-  lPlatform.GetValues('DCC_UnitSearchPath', lSearchUnits);
-
-  for var lSearchUnit in lSearchUnits do
-  begin
-    var lPath :TFileName;
-
-    lPath := TPath.GetFullPath(TPath.Combine(lProjectPath, lSearchUnit));
-
-    if TDirectory.Exists(lPath) then
-    begin
-      for var lFile in TDirectory.GetFiles(lPath, '*.pas') do
-      begin
-        var lRelativePath := ExtractRelativePath(lProjectPath, lFile);
-        if not lFiles.ContainsName(lRelativePath) then
-          lFiles.AddObject(TPath.Combine(lRelativePath,TPath.GetFileNameWithoutExtension(lFile)), TStrObj.Create(lFile));
-      end;
-    end;
-  end;
+  //1. Fine tune the fuzzy files finder
 
   var lNTAServices: INTAServices;
   if Supports(BorlandIDEServices, INTAServices, lNTAServices) then
   begin
     var lForm := TfrmDFFFiles.Create(nil);
     lNTAServices.CreateDockableForm(lForm);
-    lForm.Frame.SetFiles(lFiles);
+    lForm.Frame.SetFiles(FFiles);
   end;
 end;
 
