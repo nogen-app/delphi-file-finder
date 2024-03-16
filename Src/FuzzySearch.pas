@@ -7,14 +7,24 @@ uses
   ,Math, System.types;
 
 type
+  TWeightedResult = record
+      Weight: Integer;
+      Value: string;
+
+      class function New(aValue: string; aWeight: integer): TWeightedResult; static;
+  end;
+
   TFuzzySearch = class
   public
     class function TrigramIndex(const s: string): TList<string>;
     class function LevenshteinDistance(const s1, s2: string): Integer;
-    class function FuzzySearch(const pattern: string; const fileList: TList<string>; tolerance: Integer): TList<string>;
+    class function FuzzySearch(const pattern: string; const fileList: TList<string>; tolerance: Integer): TList<TWeightedResult>;
   end;
 
  implementation
+
+ uses
+  System.Generics.Defaults;
 
 { TFileSearch }
 
@@ -59,7 +69,7 @@ begin
 end;
 
 
-class function TFuzzySearch.FuzzySearch(const pattern: string; const fileList: TList<string>; tolerance: Integer): TList<string>;
+class function TFuzzySearch.FuzzySearch(const pattern: string; const fileList: TList<string>; tolerance: Integer): TList<TWeightedResult>;
 var
   j: Integer;
   patternIndex: TList<string>;
@@ -67,7 +77,7 @@ var
 begin
   patternIndex := TrigramIndex(pattern);
   fileIndex := TDictionary<string, TList<string>>.Create;
-  Result := TList<string>.Create;
+  Result := TList<TWeightedResult>.Create;
 
   // Build trigram index for file names
   for var i := 0 to fileList.Count-1 do
@@ -88,16 +98,29 @@ begin
     end;
     if intersectionCount >= tolerance then
     begin
-      if not Result.Contains(fileList[i]) then
-        Result.Add(fileList[i]);
+      Result.Add(TWeightedResult.New(fileList[i], intersectionCount));
     end;
   end;
 
   fileIndex.Free;
   patternIndex.Free;
 
-  //TODO: Should also order it based on matches cause right now its still kinda weird
-  //TODO: Something couuld also be done to fine tune it a bit, the algorithm is not quite working as well as i want it to
+  Result.Sort(TComparer<TWeightedResult>.Construct(
+    function(const left, right: TWeightedResult): Integer
+    begin
+      Result := TComparer<Integer>.Default.Compare(left.Weight, right.Weight);
+    end));
+
+  Result.Reverse;
+end;
+
+{ TWeightedResult }
+
+class function TWeightedResult.New(aValue: string;
+  aWeight: integer): TWeightedResult;
+begin
+  Result.Value := aValue;
+  Result.Weight := aWeight;
 end;
 
 end.

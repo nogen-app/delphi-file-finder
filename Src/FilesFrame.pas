@@ -59,7 +59,9 @@ begin
 
     lstFiles.Clear;
     for var lFile in lMatches do
-      lstFiles.AddItem(lFile, nil);
+    begin
+      lstFiles.AddItem(lFile.Value, nil);
+    end;
 
     if lstFiles.Count > 0 then
       lstFiles.Selected[0] := True;
