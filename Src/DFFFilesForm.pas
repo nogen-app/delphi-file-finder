@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
-  Vcl.Samples.Spin, Vcl.FileCtrl, ToolsAPI, ToolsAPI.UI,
+  Vcl.Samples.Spin, Vcl.FileCtrl, ToolsAPI,
   DockableForm, FilesFrame;
 
 type
