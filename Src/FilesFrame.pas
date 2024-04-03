@@ -24,6 +24,7 @@ type
     FFiles: TList<string>;
     FOnEscCalled: TNotifyEvent;
 
+    procedure DoWinAPISearch(aSearchInput: string);
     procedure DoFuzzySearch(aSearchInput: string);
     procedure OpenSelectedFile;
   public
@@ -73,9 +74,81 @@ begin
   end;
 end;
 
+procedure TfrmFilesFrame.DoWinAPISearch(aSearchInput: string);
+begin
+  var lDirectories := TList<string>.create;
+
+  var lProject := GetActiveProject;
+  if not Assigned(lProject) then //Should only try and find files, if a project is currently active. Exit early otherwise
+    Exit;
+
+  var lProjectPath := ExtractFilePath(lProject.FileName);
+
+  var lFiles := TList<string>.Create;
+
+  var lTmpFiles := TStringList.Create;
+  lProject.GetCompleteFileList(lTmpFiles);
+
+  for var lFile in lTmpFiles do
+  begin
+    if not lDirectories.Contains(ExtractFileDir(lFile)) then
+      lDirectories.Add(ExtractFileDir(lFile));
+  end;
+
+  FreeAndNil(lTmpFiles);
+
+  var lSearchUnits := TStringList.Create;
+  var lConf := lProject.ProjectOptions as IOTAProjectOptionsConfigurations;
+
+  var lPlatform := lConf.ActiveConfiguration;
+  lPlatform.GetValues('DCC_UnitSearchPath', lSearchUnits);
+
+  for var lSearchUnit in lSearchUnits do
+  begin
+    var lPath :TFileName;
+
+    lPath := TPath.GetFullPath(TPath.Combine(lProjectPath, lSearchUnit));
+
+    if TDirectory.Exists(lPath) then
+    begin
+      if not lDirectories.Contains(lPath) then
+        lDirectories.Add(lPath);
+    end;
+  end;
+
+  lstFiles.Clear;
+
+  var lpFindFileData: Win32_Find_Data;
+
+  for var lDirectory in lDirectories do
+  begin
+    var lHandle := FindFirstFileEx(PWideChar(lDirectory+'\*'+aSearchInput+'*.pas'), FindExInfoBasic, @lpFindFileData, FindExSearchNameMatch, nil, 0);
+    if lHandle <> INVALID_HANDLE_VALUE then
+    begin
+      var lMoreFiles: boolean := true;
+
+      while lMoreFiles do
+      begin
+        var lFullPath := TPath.Combine(lDirectory, lpFindFileData.cFileName);
+        var lRelativePath := ExtractRelativePath(lProjectPath, lFullPath);
+        lstFiles.AddItem(lRelativePath, nil);
+
+        lMoreFiles := FindNextFile(lHandle, lpFindFileData);
+      end;
+      Winapi.Windows.FindClose(lHandle);
+    end else
+    begin
+      var lErr := GetLastError;
+      if lErr <> ERROR_FILE_NOT_FOUND then
+        ShowMessage(SysErrorMessage(lErr));
+    end;
+  end;
+end;
+
 procedure TfrmFilesFrame.edtSearchChange(Sender: TObject);
 begin
-  DoFuzzySearch(edtSearch.Text);
+//  DoFuzzySearch(edtSearch.Text);
+  DoWinAPISearch(edtSearch.Text);
 end;
 
 procedure TfrmFilesFrame.edtSearchKeyUp(Sender: TObject; var Key: Word;
