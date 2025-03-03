@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Samples.Spin,
   Vcl.StdCtrls, Vcl.ExtCtrls, ToolsAPI,
-  System.Generics.Collections;
+  System.Generics.Collections, Spring.Container,
+  Services.IRepo;
 
 type
   TfrmFilesFrame = class(TFrame)
@@ -21,11 +22,11 @@ type
     procedure edtSearchChange(Sender: TObject);
   private
     { Private declarations }
-    FFiles: TList<string>;
     FOnEscCalled: TNotifyEvent;
 
     procedure DoWinAPISearch(aSearchInput: string);
     procedure DoFuzzySearch(aSearchInput: string);
+    procedure DoCachedSearch(aSearchInput: string);
     procedure OpenSelectedFile;
   public
     { Public declarations }
@@ -47,31 +48,46 @@ uses
 //TODO: Show what parts of the string it matched on
 constructor TfrmFilesFrame.Create(aOwner: TComponent);
 begin
-  inherited;
-  FFiles := TList<string>.Create;
+  inherited Create(aOwner);
+end;
+
+procedure TfrmFilesFrame.DoCachedSearch(aSearchInput: string);
+begin
+  var lMatches := GlobalCOntainer.Resolve<IRepo>.GetFiles(aSearchInput);
+  lstFiles.Clear;
+
+  for var lFile in lMatches do
+  begin
+    lstFiles.AddItem(lFile.Path, nil);
+  end;
+
+  if lstFiles.Count > 0 then
+    lstFiles.Selected[0] := True;
+
+  FreeAndNil(lMatches);
 end;
 
 procedure TfrmFilesFrame.DoFuzzySearch(aSearchInput: string);
 begin
   //Should only search if something has been entered, otherwise we show all files
-  if aSearchInput <> '' then
-  begin
-    var lMatches := TFuzzySearch.FuzzySearch(aSearchInput, FFiles, seTolerance.Value);
-
-    lstFiles.Clear;
-    for var lFile in lMatches do
-    begin
-      lstFiles.AddItem(lFile.Value, nil);
-    end;
-
-    if lstFiles.Count > 0 then
-      lstFiles.Selected[0] := True;
-  end else
-  begin
-    lstFiles.Clear;
-    for var lFile in FFiles do
-      lstFiles.AddItem(lFile, nil);
-  end;
+//  if aSearchInput <> '' then
+//  begin
+//    var lMatches := TFuzzySearch.FuzzySearch(aSearchInput, FFiles, seTolerance.Value);
+//
+//    lstFiles.Clear;
+//    for var lFile in lMatches do
+//    begin
+//      lstFiles.AddItem(lFile.Value, nil);
+//    end;
+//
+//    if lstFiles.Count > 0 then
+//      lstFiles.Selected[0] := True;
+//  end else
+//  begin
+//    lstFiles.Clear;
+//    for var lFile in FFiles do
+//      lstFiles.AddItem(lFile, nil);
+//  end;
 end;
 
 procedure TfrmFilesFrame.DoWinAPISearch(aSearchInput: string);
@@ -148,7 +164,8 @@ end;
 procedure TfrmFilesFrame.edtSearchChange(Sender: TObject);
 begin
 //  DoFuzzySearch(edtSearch.Text);
-  DoWinAPISearch(edtSearch.Text);
+//  DoWinAPISearch(edtSearch.Text);
+  DoCachedSearch(edtSearch.Text);
 end;
 
 procedure TfrmFilesFrame.edtSearchKeyUp(Sender: TObject; var Key: Word;
@@ -178,6 +195,8 @@ end;
 
 procedure TfrmFilesFrame.OpenSelectedFile;
 begin
+  if lstFiles.Count = 0 then exit;
+  
   var lSelectedFile := lstFiles.Items[lstFiles.ItemIndex];
   var lRootPath := ExtractFilePath(GetActiveProject.FileName);
   lSelectedFile := TPath.GetFullPath(TPath.Combine(lRootPath, lSelectedFile)); 
@@ -191,20 +210,20 @@ end;
 
 procedure TfrmFilesFrame.SetFiles(aFiles: TList<string>);
 begin
-  FFiles.Clear;
-  for var lFile in aFiles do
-  begin
-    FFiles.Add(lFile);
-  end;
-
-  lstFiles.Clear;
-
-  for var lFile in FFiles do
-  begin
-    lstFiles.AddItem(lFile, nil);
-  end;
-
-  DoFuzzySearch(edtSearch.Text);
+//  FFiles.Clear;
+//  for var lFile in aFiles do
+//  begin
+//    FFiles.Add(lFile);
+//  end;
+//
+//  lstFiles.Clear;
+//
+//  for var lFile in FFiles do
+//  begin
+//    lstFiles.AddItem(lFile, nil);
+//  end;
+//
+//  DoFuzzySearch(edtSearch.Text);
 end;
 
 end.

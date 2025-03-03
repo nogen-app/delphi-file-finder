@@ -14,6 +14,7 @@ exports
 
 implementation
 
+
 const
   InvalidIndex = -1;
 
@@ -65,16 +66,16 @@ begin
     Terminate := FinalizeWizard;
     WizardServices := BorlandIDEServices as IOTAWizardServices;
     Assert(Assigned(WizardServices));
+
+    AddSplashScreenInfo;
     DFFWiz := TDFFWizard.Create;
 
     RegisterKeyBinds(BorlandIDEServices, DFFWiz);
+
 
     FWizardIndex := WizardServices.AddWizard(DFFWiz as IOTAWizard);
     Result := (FWizardIndex >= 0);
   end;
 end;
-
-initialization
-  AddSplashScreenInfo;
 
 end.

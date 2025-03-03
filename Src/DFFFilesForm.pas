@@ -12,8 +12,6 @@ type
   TfrmDFFFiles = class(TfrmDockableForm, INTACustomDockableForm)
   private
     FFrame: TfrmFilesFrame;
-
-    procedure doEscCalled(Sender: TObject);
   public //INTACustomDockableForm
     function GetCaption: string; override;
     function GetIdentifier: string; override;

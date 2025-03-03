@@ -4,15 +4,16 @@ interface
 
 uses
   Classes, System.SysUtils, ToolsAPI, Vcl.AppEvnts,
-  Vcl.Forms, Winapi.Windows, Winapi.Messages, FilesIndexingThread,
-  System.Generics.Collections, DFFFilesForm;
+  Vcl.Forms, Winapi.Windows, Winapi.Messages,
+  System.Generics.Collections, DFFFilesForm,
+  FileIndexThread, Spring.COntainer, ServiceRegistration;
 
 type
 
   TDFFWizard = class(TNotifierObject, IOTAWizard, IOTAKeyboardBinding)
   private
-    FFilesIndexingThread: TFilesIndexingThread;
     FForm: TfrmDFFFiles;
+    FIndexThread: TFileIndexThread;
 
     procedure DoNewFilesIndexed(aFiles: TList<string>);
 
@@ -24,6 +25,7 @@ type
   public
     constructor Create;
 
+
     function GetIDString:string;
     function GetName: string;
     function GetState: TWizardState;
@@ -31,6 +33,7 @@ type
     procedure Execute;
 
     procedure BindKeyboard(const BindingServices: IOTAKeyBindingServices);
+    destructor Destroy; override;
 
     property BindingType: TBindingType read GetBindingType;
     property DisplayName: string read GetDisplayName;
@@ -56,8 +59,19 @@ end;
 
 constructor TDFFWizard.Create;
 begin
+  RegisterServices;
+  FIndexThread := GlobalContainer.Resolve<TFileIndexThread>;
+
+
 //  FFilesIndexingThread := TFilesIndexingThread.Create(DoNewFilesIndexed);
 //  FFilesIndexingThread.Start;
+end;
+
+destructor TDFFWizard.Destroy;
+begin
+  FIndexThread.Terminate;
+  FreeAndNil(FIndexThread);
+  inherited;
 end;
 
 procedure TDFFWizard.DoNewFilesIndexed(aFiles: TList<string>);

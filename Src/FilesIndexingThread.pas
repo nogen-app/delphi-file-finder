@@ -121,7 +121,6 @@ begin
     end;
   end;
 
-  //TODO: Should only call if there are any new files.
   if Assigned(FCallback) then
   begin
     Synchronize(procedure

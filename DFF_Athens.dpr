@@ -28,9 +28,13 @@ uses
   FuzzySearch in 'Src\FuzzySearch.pas',
   DockableForm in 'Src\DockableForm.pas' {frmDockableForm},
   FilesFrame in 'Src\FilesFrame.pas' {frmFilesFrame: TFrame},
-  FilesIndexingThread in 'Src\FilesIndexingThread.pas';
+  ServiceRegistration in 'Src\ServiceRegistration.pas',
+  FileIndexThread in 'Src\FileIndexThread.pas',
+  Services.IRepo in 'Src\Services.IRepo.pas',
+  Services.Repo in 'Src\Services.Repo.pas';
 
 {$R *.res}
 
 begin
 end.
+
