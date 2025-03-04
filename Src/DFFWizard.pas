@@ -6,7 +6,8 @@ uses
   Classes, System.SysUtils, ToolsAPI, Vcl.AppEvnts,
   Vcl.Forms, Winapi.Windows, Winapi.Messages,
   System.Generics.Collections, DFFFilesForm,
-  FileIndexThread, Spring.COntainer, ServiceRegistration;
+  FileIndexThread, Spring.COntainer, ServiceRegistration,
+  DFFWizard.Welcome;
 
 type
 
@@ -14,8 +15,6 @@ type
   private
     FForm: TfrmDFFFiles;
     FIndexThread: TFileIndexThread;
-
-    procedure DoNewFilesIndexed(aFiles: TList<string>);
 
     function GetBindingType: TBindingType;
     function GetDisplayName: string;
@@ -61,10 +60,6 @@ constructor TDFFWizard.Create;
 begin
   RegisterServices;
   FIndexThread := GlobalContainer.Resolve<TFileIndexThread>;
-
-
-//  FFilesIndexingThread := TFilesIndexingThread.Create(DoNewFilesIndexed);
-//  FFilesIndexingThread.Start;
 end;
 
 destructor TDFFWizard.Destroy;
@@ -72,12 +67,6 @@ begin
   FIndexThread.Terminate;
   FreeAndNil(FIndexThread);
   inherited;
-end;
-
-procedure TDFFWizard.DoNewFilesIndexed(aFiles: TList<string>);
-begin
-//  if Assigned(FForm) then
-//    FForm.Frame.SetFiles(aFiles);
 end;
 
 procedure TDFFWizard.Execute;

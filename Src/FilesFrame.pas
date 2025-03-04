@@ -24,24 +24,19 @@ type
     { Private declarations }
     FOnEscCalled: TNotifyEvent;
 
-    procedure DoWinAPISearch(aSearchInput: string);
-    procedure DoFuzzySearch(aSearchInput: string);
     procedure DoCachedSearch(aSearchInput: string);
     procedure OpenSelectedFile;
   public
     { Public declarations }
     constructor Create(aOwner: TComponent); override;
 
-    procedure SetFiles(aFiles: TList<string>);
-
     property OnEscCalled: TNotifyEvent read FOnEscCalled write FOnEscCalled;
-
   end;
 
 implementation
 
 uses
-  FuzzySearch, System.IOUtils;
+  System.IOUtils;
 
 {$R *.dfm}
 
@@ -67,104 +62,8 @@ begin
   FreeAndNil(lMatches);
 end;
 
-procedure TfrmFilesFrame.DoFuzzySearch(aSearchInput: string);
-begin
-  //Should only search if something has been entered, otherwise we show all files
-//  if aSearchInput <> '' then
-//  begin
-//    var lMatches := TFuzzySearch.FuzzySearch(aSearchInput, FFiles, seTolerance.Value);
-//
-//    lstFiles.Clear;
-//    for var lFile in lMatches do
-//    begin
-//      lstFiles.AddItem(lFile.Value, nil);
-//    end;
-//
-//    if lstFiles.Count > 0 then
-//      lstFiles.Selected[0] := True;
-//  end else
-//  begin
-//    lstFiles.Clear;
-//    for var lFile in FFiles do
-//      lstFiles.AddItem(lFile, nil);
-//  end;
-end;
-
-procedure TfrmFilesFrame.DoWinAPISearch(aSearchInput: string);
-begin
-  var lDirectories := TList<string>.create;
-
-  var lProject := GetActiveProject;
-  if not Assigned(lProject) then //Should only try and find files, if a project is currently active. Exit early otherwise
-    Exit;
-
-  var lProjectPath := ExtractFilePath(lProject.FileName);
-
-  var lFiles := TList<string>.Create;
-
-  var lTmpFiles := TStringList.Create;
-  lProject.GetCompleteFileList(lTmpFiles);
-
-  for var lFile in lTmpFiles do
-  begin
-    if not lDirectories.Contains(ExtractFileDir(lFile)) then
-      lDirectories.Add(ExtractFileDir(lFile));
-  end;
-
-  FreeAndNil(lTmpFiles);
-
-  var lSearchUnits := TStringList.Create;
-  var lConf := lProject.ProjectOptions as IOTAProjectOptionsConfigurations;
-
-  var lPlatform := lConf.ActiveConfiguration;
-  lPlatform.GetValues('DCC_UnitSearchPath', lSearchUnits);
-
-  for var lSearchUnit in lSearchUnits do
-  begin
-    var lPath :TFileName;
-
-    lPath := TPath.GetFullPath(TPath.Combine(lProjectPath, lSearchUnit));
-
-    if TDirectory.Exists(lPath) then
-    begin
-      if not lDirectories.Contains(lPath) then
-        lDirectories.Add(lPath);
-    end;
-  end;
-
-  lstFiles.Clear;
-
-  var lpFindFileData: Win32_Find_Data;
-
-  for var lDirectory in lDirectories do
-  begin
-    var lHandle := FindFirstFileEx(PWideChar(lDirectory+'\*'+aSearchInput+'*.pas'), FindExInfoBasic, @lpFindFileData, FindExSearchNameMatch, nil, 0);
-    if lHandle <> INVALID_HANDLE_VALUE then
-    begin
-      var lMoreFiles: boolean := true;
-
-      while lMoreFiles do
-      begin
-        var lFullPath := TPath.Combine(lDirectory, lpFindFileData.cFileName);
-        var lRelativePath := ExtractRelativePath(lProjectPath, lFullPath);
-        lstFiles.AddItem(lRelativePath, nil);
-
-        lMoreFiles := FindNextFile(lHandle, lpFindFileData);
-      end;
-      Winapi.Windows.FindClose(lHandle);
-    end else
-    begin
-      var lErr := GetLastError;
-      if lErr <> ERROR_FILE_NOT_FOUND then
-        ShowMessage(SysErrorMessage(lErr));
-    end;
-  end;
-end;
-
 procedure TfrmFilesFrame.edtSearchChange(Sender: TObject);
 begin
-//  DoFuzzySearch(edtSearch.Text);
-//  DoWinAPISearch(edtSearch.Text);
   DoCachedSearch(edtSearch.Text);
 end;
 
@@ -206,24 +105,6 @@ begin
   begin
     lActionService.OpenFile(lSelectedFile);
   end;
-end;
-
-procedure TfrmFilesFrame.SetFiles(aFiles: TList<string>);
-begin
-//  FFiles.Clear;
-//  for var lFile in aFiles do
-//  begin
-//    FFiles.Add(lFile);
-//  end;
-//
-//  lstFiles.Clear;
-//
-//  for var lFile in FFiles do
-//  begin
-//    lstFiles.AddItem(lFile, nil);
-//  end;
-//
-//  DoFuzzySearch(edtSearch.Text);
 end;
 
 end.

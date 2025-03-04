@@ -1,8 +1,8 @@
 ﻿[ClosedView_QzpcQUhLXFZpbVxkZWxwaGktZmlsZS1maW5kZXJcU3JjXERMTEVudHJ5LnBhcw==]
 Module=C:\AHK\Vim\delphi-file-finder\Src\DLLEntry.pas
-CursorX=1
-CursorY=41
-TopLine=1
+CursorX=44
+CursorY=14
+TopLine=52
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -10,7 +10,7 @@ EditViewName=C:\AHK\Vim\delphi-file-finder\Src\DLLEntry.pas
 
 [ClosedView_QzpcQUhLXFZpbVxkZWxwaGktZmlsZS1maW5kZXJcU3JjXERGRkZpbGVzRm9ybS5wYXM=]
 Module=C:\AHK\Vim\delphi-file-finder\Src\DFFFilesForm.pas
-CursorX=16
+CursorX=27
 CursorY=37
 TopLine=1
 LeftCol=1
@@ -20,9 +20,9 @@ EditViewName=C:\AHK\Vim\delphi-file-finder\Src\DFFFilesForm.pas
 
 [ClosedView_QzpcQUhLXFZpbVxkZWxwaGktZmlsZS1maW5kZXJcU3JjXEZpbGVzRnJhbWUucGFz]
 Module=C:\AHK\Vim\delphi-file-finder\Src\FilesFrame.pas
-CursorX=1
-CursorY=56
-TopLine=28
+CursorX=47
+CursorY=107
+TopLine=83
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -80,9 +80,9 @@ EditViewName=C:\AHK\Vim\delphi-file-finder\Src\ServiceRegistration.pas
 
 [ClosedView_QzpcQUhLXFZpbVxkZWxwaGktZmlsZS1maW5kZXJcU3JjXERGRldpemFyZC5wYXM=]
 Module=C:\AHK\Vim\delphi-file-finder\Src\DFFWizard.pas
-CursorX=1
-CursorY=117
-TopLine=75
+CursorX=32
+CursorY=106
+TopLine=91
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -90,8 +90,8 @@ EditViewName=C:\AHK\Vim\delphi-file-finder\Src\DFFWizard.pas
 
 [ClosedView_QzpcQUhLXFZpbVxkZWxwaGktZmlsZS1maW5kZXJcREZGX0F0aGVucy5kcHI=]
 Module=C:\AHK\Vim\delphi-file-finder\DFF_Athens.dpr
-CursorX=1
-CursorY=40
+CursorX=17
+CursorY=26
 TopLine=1
 LeftCol=1
 Elisions=
@@ -100,8 +100,8 @@ EditViewName=C:\AHK\Vim\delphi-file-finder\DFF_Athens.dpr
 
 [ClosedView_QzpcQUhLXFZpbVxkZWxwaGktZmlsZS1maW5kZXJcU3JjXFNlcnZpY2VzLklSZXBvLnBhcw==]
 Module=C:\AHK\Vim\delphi-file-finder\Src\Services.IRepo.pas
-CursorX=68
-CursorY=14
+CursorX=43
+CursorY=17
 TopLine=2
 LeftCol=1
 Elisions=
@@ -112,7 +112,7 @@ EditViewName=C:\AHK\Vim\delphi-file-finder\Src\Services.IRepo.pas
 Module=C:\AHK\Vim\delphi-file-finder\Src\Services.Repo.pas
 CursorX=84
 CursorY=175
-TopLine=112
+TopLine=49
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -597,4 +597,74 @@ LeftCol=1
 Elisions=
 Bookmarks=
 EditViewName=c:\program files (x86)\embarcadero\studio\23.0\source\data\firedac\FireDAC.Phys.SQLiteWrapper.pas
+
+[ClosedView_QzpcQUhLXFZpbVxkZWxwaGktZmlsZS1maW5kZXJcU3JjXERGRldpemFyZC5XZWxjb21lLnBhcw==]
+Module=C:\AHK\Vim\delphi-file-finder\Src\DFFWizard.Welcome.pas
+CursorX=42
+CursorY=24
+TopLine=7
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=C:\AHK\Vim\delphi-file-finder\Src\DFFWizard.Welcome.pas
+[ClosedView_YzpccHJvZ3JhbSBmaWxlcyAoeDg2KVxlbWJhcmNhZGVyb1xzdHVkaW9cMjMuMFxzb3VyY2VccnRs
+XGNvbW1vblxTeXN0ZW0uQ2xhc3Nlcy5wYXM=]
+Module=c:\program files (x86)\embarcadero\studio\23.0\source\rtl\common\System.Classes.pas
+CursorX=1
+CursorY=10355
+TopLine=10340
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=c:\program files (x86)\embarcadero\studio\23.0\source\rtl\common\System.Classes.pas
+[ClosedView_YzpccHJvZ3JhbSBmaWxlcyAoeDg2KVxlbWJhcmNhZGVyb1xzdHVkaW9cMjMuMFxTT1VSQ0VcVkNM
+XFZjbC5HcmFwaGljcy5wYXM=]
+Module=c:\program files (x86)\embarcadero\studio\23.0\SOURCE\VCL\Vcl.Graphics.pas
+CursorX=50
+CursorY=2966
+TopLine=2960
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=c:\program files (x86)\embarcadero\studio\23.0\SOURCE\VCL\Vcl.Graphics.pas
+[ClosedView_YzpccHJvZ3JhbSBmaWxlcyAoeDg2KVxlbWJhcmNhZGVyb1xzdHVkaW9cMjMuMFxTT1VSQ0VcVkNM
+XFZjbC5HcmFwaGljcy5wYXM=]
+Module=c:\program files (x86)\embarcadero\studio\23.0\SOURCE\VCL\Vcl.Graphics.pas
+CursorX=50
+CursorY=2966
+TopLine=2960
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=c:\program files (x86)\embarcadero\studio\23.0\SOURCE\VCL\Vcl.Graphics.pas
+[ClosedView_YzpccHJvZ3JhbSBmaWxlcyAoeDg2KVxlbWJhcmNhZGVyb1xzdHVkaW9cMjMuMFxTT1VSQ0VcUlRM
+XFNZU1xTeXN0ZW0ucGFz]
+Module=c:\program files (x86)\embarcadero\studio\23.0\SOURCE\RTL\SYS\System.pas
+CursorX=29
+CursorY=18424
+TopLine=18412
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=
+[ClosedView_YzpccHJvZ3JhbSBmaWxlcyAoeDg2KVxlbWJhcmNhZGVyb1xzdHVkaW9cMjMuMFxTT1VSQ0VcVkNM
+XFZjbC5HcmFwaGljcy5wYXM=]
+Module=c:\program files (x86)\embarcadero\studio\23.0\SOURCE\VCL\Vcl.Graphics.pas
+CursorX=24
+CursorY=2965
+TopLine=2960
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=c:\program files (x86)\embarcadero\studio\23.0\SOURCE\VCL\Vcl.Graphics.pas
+[ClosedView_YzpccHJvZ3JhbSBmaWxlcyAoeDg2KVxlbWJhcmNhZGVyb1xzdHVkaW9cMjMuMFxTT1VSQ0VcVkNM
+XFZjbC5HcmFwaGljcy5wYXM=]
+Module=c:\program files (x86)\embarcadero\studio\23.0\SOURCE\VCL\Vcl.Graphics.pas
+CursorX=24
+CursorY=2965
+TopLine=2960
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=c:\program files (x86)\embarcadero\studio\23.0\SOURCE\VCL\Vcl.Graphics.pas
 

@@ -17,6 +17,14 @@ library DFF_Athens;
 
 
 
+
+
+
+
+
+
+
+
 {$R *.dres}
 
 uses
@@ -25,13 +33,13 @@ uses
   DLLEntry in 'Src\DLLEntry.pas',
   DFFWizard in 'Src\DFFWizard.pas',
   DFFFilesForm in 'Src\DFFFilesForm.pas' {frmDFFFiles},
-  FuzzySearch in 'Src\FuzzySearch.pas',
   DockableForm in 'Src\DockableForm.pas' {frmDockableForm},
   FilesFrame in 'Src\FilesFrame.pas' {frmFilesFrame: TFrame},
   ServiceRegistration in 'Src\ServiceRegistration.pas',
   FileIndexThread in 'Src\FileIndexThread.pas',
   Services.IRepo in 'Src\Services.IRepo.pas',
-  Services.Repo in 'Src\Services.Repo.pas';
+  Services.Repo in 'Src\Services.Repo.pas',
+  DFFWizard.Welcome in 'Src\DFFWizard.Welcome.pas';
 
 {$R *.res}
 

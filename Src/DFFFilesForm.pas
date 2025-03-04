@@ -24,9 +24,6 @@ type
 
 implementation
 
-uses
-  FuzzySearch;
-
 {$R *.dfm}
 
 { TfrmDFFFiles }
