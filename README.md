@@ -39,8 +39,8 @@ After that its just a matter of opening the project for your delphi version and 
 
 ## Roadmap
 
-* Optimizing the search function by making use of SQLite FTS3/FTS4
-* Improve the design of the frame
-* Add settings menu to allow changing of the hotkey
-* Add vim like bindings for navigating the search frame
-* Get the package registered on gedit
+* [] Optimizing the search function by making use of SQLite FTS3/FTS4
+* [] Improve the design of the frame
+* [] Add settings menu to allow changing of the hotkey
+* [] Add vim like bindings for navigating the search frame
+* [] Get the package registered on gedit

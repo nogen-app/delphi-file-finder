@@ -27,7 +27,6 @@ implementation
 
 uses
   ToolsAPI,
-  System.Generics.Collections,
   System.IOUtils,
   Spring.Collections;
 

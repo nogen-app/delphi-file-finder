@@ -4,8 +4,8 @@ interface
 
 uses
   Classes, System.SysUtils, ToolsAPI, Vcl.AppEvnts,
-  Vcl.Forms, Winapi.Windows, Winapi.Messages,
-  System.Generics.Collections, DFFFilesForm,
+  Vcl.Forms,
+  DFFFilesForm,
   FileIndexThread, Spring.COntainer, ServiceRegistration,
   DFFWizard.Welcome;
 
@@ -44,8 +44,8 @@ var
 implementation
 
 uses
-  System.IOUtils,
-  Vcl.Controls, Vcl.Menus;
+
+  Vcl.Menus;
 
 { TDFFWizard }
   //TODO: Should add a menu item, with a settings wheel, so people can change the hotkey

@@ -3,10 +3,10 @@ unit FilesFrame;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Winapi.Windows, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Samples.Spin,
   Vcl.StdCtrls, Vcl.ExtCtrls, ToolsAPI,
-  System.Generics.Collections, Spring.Container,
+  Spring.Container, Spring.Collections,
   Services.IRepo;
 
 type
@@ -58,8 +58,6 @@ begin
 
   if lstFiles.Count > 0 then
     lstFiles.Selected[0] := True;
-
-  FreeAndNil(lMatches);
 end;
 
 procedure TfrmFilesFrame.edtSearchChange(Sender: TObject);

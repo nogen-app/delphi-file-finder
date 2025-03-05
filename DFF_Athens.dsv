@@ -1,16 +1,16 @@
 ﻿[ClosedView_QzpcQUhLXFZpbVxkZWxwaGktZmlsZS1maW5kZXJcU3JjXERMTEVudHJ5LnBhcw==]
 Module=C:\AHK\Vim\delphi-file-finder\Src\DLLEntry.pas
-CursorX=44
-CursorY=14
-TopLine=52
+CursorX=46
+CursorY=13
+TopLine=1
 LeftCol=1
 Elisions=
 Bookmarks=
-EditViewName=C:\AHK\Vim\delphi-file-finder\Src\DLLEntry.pas
+EditViewName=
 
 [ClosedView_QzpcQUhLXFZpbVxkZWxwaGktZmlsZS1maW5kZXJcU3JjXERGRkZpbGVzRm9ybS5wYXM=]
 Module=C:\AHK\Vim\delphi-file-finder\Src\DFFFilesForm.pas
-CursorX=27
+CursorX=5
 CursorY=37
 TopLine=1
 LeftCol=1
@@ -20,9 +20,9 @@ EditViewName=C:\AHK\Vim\delphi-file-finder\Src\DFFFilesForm.pas
 
 [ClosedView_QzpcQUhLXFZpbVxkZWxwaGktZmlsZS1maW5kZXJcU3JjXEZpbGVzRnJhbWUucGFz]
 Module=C:\AHK\Vim\delphi-file-finder\Src\FilesFrame.pas
-CursorX=47
-CursorY=107
-TopLine=83
+CursorX=18
+CursorY=15
+TopLine=1
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -30,9 +30,9 @@ EditViewName=C:\AHK\Vim\delphi-file-finder\Src\FilesFrame.pas
 
 [ClosedView_QzpcQUhLXFZpbVxkZWxwaGktZmlsZS1maW5kZXJcU3JjXEZpbGVJbmRleFRocmVhZC5wYXM=]
 Module=C:\AHK\Vim\delphi-file-finder\Src\FileIndexThread.pas
-CursorX=31
-CursorY=116
-TopLine=58
+CursorX=25
+CursorY=12
+TopLine=1
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -80,9 +80,9 @@ EditViewName=C:\AHK\Vim\delphi-file-finder\Src\ServiceRegistration.pas
 
 [ClosedView_QzpcQUhLXFZpbVxkZWxwaGktZmlsZS1maW5kZXJcU3JjXERGRldpemFyZC5wYXM=]
 Module=C:\AHK\Vim\delphi-file-finder\Src\DFFWizard.pas
-CursorX=32
-CursorY=106
-TopLine=91
+CursorX=9
+CursorY=8
+TopLine=1
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -100,8 +100,8 @@ EditViewName=C:\AHK\Vim\delphi-file-finder\DFF_Athens.dpr
 
 [ClosedView_QzpcQUhLXFZpbVxkZWxwaGktZmlsZS1maW5kZXJcU3JjXFNlcnZpY2VzLklSZXBvLnBhcw==]
 Module=C:\AHK\Vim\delphi-file-finder\Src\Services.IRepo.pas
-CursorX=43
-CursorY=17
+CursorX=22
+CursorY=11
 TopLine=2
 LeftCol=1
 Elisions=
@@ -110,9 +110,9 @@ EditViewName=C:\AHK\Vim\delphi-file-finder\Src\Services.IRepo.pas
 
 [ClosedView_QzpcQUhLXFZpbVxkZWxwaGktZmlsZS1maW5kZXJcU3JjXFNlcnZpY2VzLlJlcG8ucGFz]
 Module=C:\AHK\Vim\delphi-file-finder\Src\Services.Repo.pas
-CursorX=84
-CursorY=175
-TopLine=49
+CursorX=20
+CursorY=146
+TopLine=132
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -600,7 +600,7 @@ EditViewName=c:\program files (x86)\embarcadero\studio\23.0\source\data\firedac\
 
 [ClosedView_QzpcQUhLXFZpbVxkZWxwaGktZmlsZS1maW5kZXJcU3JjXERGRldpemFyZC5XZWxjb21lLnBhcw==]
 Module=C:\AHK\Vim\delphi-file-finder\Src\DFFWizard.Welcome.pas
-CursorX=42
+CursorX=32
 CursorY=24
 TopLine=7
 LeftCol=1

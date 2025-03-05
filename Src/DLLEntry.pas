@@ -3,7 +3,7 @@ unit DLLEntry;
 interface
 
 uses
-  SysUtils, ToolsAPI, DFFWizard, System.Classes, Winapi.Windows, vcl.Graphics;
+  SysUtils, ToolsAPI, DFFWizard;
 
 function InitWizard(const BorlandIDEServices: IBorlandIDEServices;
   RegisterProc: TWizardRegisterProc; var Terminate: TWizardTerminateProc): Boolean; stdcall;

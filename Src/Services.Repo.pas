@@ -8,16 +8,15 @@ uses
   Spring.Collections,
 
   System.SysUtils,
-  System.Generics.Collections,
   System.Variants,
   System.SyncObjs,
 
   FireDAC.VCLUI.Wait,
   FireDAC.Stan.Intf, FireDAC.Stan.Option,
-  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
+  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Stan.Def,
   FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys,
   Data.DB, FireDAC.Comp.Client, FireDAC.Phys.SQLite,
-  Firedac.DApt, FireDac.Comp.UI;
+  Firedac.DApt;
 
 type
 
@@ -30,7 +29,7 @@ type
     public
       constructor Create;
 
-      function GetFiles(aQuery: string): TList<TSearchResult>;
+      function GetFiles(aQuery: string): IList<TSearchResult>;
       procedure AddFile(aFileName: string; aPath: string);
       procedure BatchAddFiles(aFiles: IList<string>);
 
@@ -143,9 +142,9 @@ begin
   inherited;
 end;
 
-function TRepo.GetFiles(aQuery: string): TList<TSearchResult>;
+function TRepo.GetFiles(aQuery: string): IList<TSearchResult>;
 begin
-  Result := TList<TSearchResult>.Create;
+  Result := TCollections.CreateList<TSearchResult>;
 
   FCT.Enter;
   try
@@ -175,9 +174,6 @@ begin
   finally
     FCT.Leave;
   end;
-
-
-
 end;
 
 end.
