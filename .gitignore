@@ -10,3 +10,4 @@ Src/__history/*
 *.dsk
 *.~dsk
 spring4d/*
+*.dsv
