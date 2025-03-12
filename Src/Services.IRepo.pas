@@ -16,7 +16,7 @@ type
 
     function GetFiles(aQuery: string): IList<TSearchResult>;
     procedure AddFile(aFileName: string; aPath: string);
-    procedure BatchAddFiles(aFiles: IList<string>);
+    procedure BatchAddFiles(aFiles: IOrderedSet<string>);
 
   end;
 

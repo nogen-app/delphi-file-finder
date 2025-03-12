@@ -71,7 +71,7 @@ begin
 
   var lProjectPath := ExtractFilePath(lProject.FileName);
 
-  var lFiles := TCollections.CreateList<string>;
+  var lFiles := TCollections.CreateSet<string>;
 
   var lTmpFiles := TStringList.Create;
   lProject.GetCompleteFileList(lTmpFiles);
@@ -81,8 +81,7 @@ begin
     if ExtractFileExt(lFile) = '.pas' then
     begin
       var lRelativePath := ExtractRelativePath(lProjectPath, lFile);
-      if not lFiles.Contains(lRelativePath) then
-        lFiles.Add(lRelativePath);
+      lFiles.Add(lRelativePath);
     end;
   end;
 
@@ -105,12 +104,10 @@ begin
       for var lFile in TDirectory.GetFiles(lPath, '*.pas') do
       begin
         var lRelativePath := ExtractRelativePath(lProjectPath, lFile);
-        if not lFiles.Contains(lRelativePath) then
-          lFiles.Add(lRelativePath);
+        lFiles.Add(lRelativePath);
       end;
     end;
   end;
-
 
   FRepo.BatchAddFiles(lFiles);
 end;

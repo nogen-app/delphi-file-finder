@@ -31,7 +31,7 @@ type
 
       function GetFiles(aQuery: string): IList<TSearchResult>;
       procedure AddFile(aFileName: string; aPath: string);
-      procedure BatchAddFiles(aFiles: IList<string>);
+      procedure BatchAddFiles(aFiles: IOrderedSet<string>);
 
       destructor Destroy; override;
   end;
@@ -53,12 +53,12 @@ begin
     try
       with lQuery do
       begin
-        Open('SELECT Path FROM files WHERE Path=?', [aPath]);
+        Open('SELECT path FROM files WHERE path=?', [aPath]);
 
         if RecordCount = 0 then
         begin
           SQL.Clear;
-          SQL.Add('INSERT INTO files (Path,Name) VALUES (:path,:name)');
+          SQL.Add('INSERT INTO files (path,name) VALUES (:path,:name)');
           Params.ParamByName('path').AsString := aPath;
           Params.ParamByName('name').AsString := aFileName;
 
@@ -73,7 +73,7 @@ begin
   end;
 end;
 
-procedure TRepo.BatchAddFiles(aFiles: IList<string>);
+procedure TRepo.BatchAddFiles(aFiles: IOrderedSet<string>);
 begin
   FCT.Enter;
   try
@@ -82,12 +82,12 @@ begin
     try
       with lQuery do
       begin
-        SQL.Add('delete from files;');
+        SQL.Add('DELETE FROM files;');
 
         for var lFile in aFiles do
         begin
           var lFileName := TPath.GetFileName(lFile);
-          SQL.Add('INSERT INTO files (Path,Name) VALUES ('''+lFIle+''','''+lFileName+''');');
+          SQL.Add('INSERT INTO files (path,name) VALUES ('''+lFIle+''','''+lFileName+''');');
         end;
 
         Execute;
@@ -121,9 +121,9 @@ begin
     begin
       SQL.Add('''
                   CREATE TABLE `files` (
-                    `Path`	TEXT NOT NULL UNIQUE,
-                    `Name`	TEXT NOT NULL,
-                    PRIMARY KEY(Path)
+                    `path`	TEXT NOT NULL UNIQUE,
+                    `name`	TEXT NOT NULL,
+                    PRIMARY KEY(path)
                   );
               ''');
 
@@ -153,14 +153,14 @@ begin
     try
       with lQuery do
       begin
-        Open('SELECT * FROM files WHERE Name LIKE ?', [('%'+aQuery+'%')]);
+        Open('SELECT * FROM files WHERE name LIKE ?', [('%'+aQuery+'%')]);
 
         while not EOF do
         begin
           var lResult: TSearchResult;
 
-          lResult.FileName := FieldByName('Name').AsString;
-          lResult.Path := FieldByName('Path').AsString;
+          lResult.FileName := FieldByName('name').AsString;
+          lResult.Path := FieldByName('path').AsString;
 
           Result.Add(lResult);
 

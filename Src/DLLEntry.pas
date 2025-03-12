@@ -12,21 +12,18 @@ exports
 
 implementation
 
-const
-  INVALID_INDEX = -1;
-
 var
-  WizardIndex: Integer = INVALID_INDEX;
+  WizardIndex: Integer;
 
 procedure FinalizeWizard;
 var
   WizardServices: IOTAWizardServices;
 begin
-  if WizardIndex <> INVALID_INDEX then
+  if (WizardIndex >= 0) then
   begin
     WizardServices := BorlandIDEServices as IOTAWizardServices;
     WizardServices.RemoveWizard(WizardIndex);
-    WizardIndex := INVALID_INDEX;
+    WizardIndex := 0;
   end;
 end;
 

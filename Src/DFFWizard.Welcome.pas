@@ -19,7 +19,7 @@ resourcestring
   resLicense = 'MIT License';
   resAboutCopyright = 'nogen I/S';
   resAboutTitle = 'File finder';
-  resAboutDescription = 'An IDE plugin for Embarcadero delphi, used to fuzzy search for files available to the current active project';
+  resAboutDescription = 'An IDE plugin for Embarcadero delphi used to fuzzy search files available in the active project';
 
 procedure RegisterSplashScreen;
 var
