@@ -7,3 +7,7 @@ __history/*
 Src/__history/*
 *.dres
 *.rc
+*.dsk
+*.~dsk
+spring4d/*
+*.dsv

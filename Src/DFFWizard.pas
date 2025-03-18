@@ -4,17 +4,17 @@ interface
 
 uses
   Classes, System.SysUtils, ToolsAPI, Vcl.AppEvnts,
-  Vcl.Forms, Winapi.Windows, Winapi.Messages, FilesIndexingThread,
-  System.Generics.Collections, DFFFilesForm;
+  Vcl.Forms,
+  DFFFilesForm,
+  FileIndexThread, Spring.COntainer, ServiceRegistration,
+  DFFWizard.Welcome;
 
 type
 
   TDFFWizard = class(TNotifierObject, IOTAWizard, IOTAKeyboardBinding)
   private
-    FFilesIndexingThread: TFilesIndexingThread;
     FForm: TfrmDFFFiles;
-
-    procedure DoNewFilesIndexed(aFiles: TList<string>);
+    FIndexThread: TFileIndexThread;
 
     function GetBindingType: TBindingType;
     function GetDisplayName: string;
@@ -24,6 +24,7 @@ type
   public
     constructor Create;
 
+
     function GetIDString:string;
     function GetName: string;
     function GetState: TWizardState;
@@ -31,6 +32,7 @@ type
     procedure Execute;
 
     procedure BindKeyboard(const BindingServices: IOTAKeyBindingServices);
+    destructor Destroy; override;
 
     property BindingType: TBindingType read GetBindingType;
     property DisplayName: string read GetDisplayName;
@@ -42,30 +44,29 @@ var
 implementation
 
 uses
-  System.IOUtils,
-  Vcl.Controls, Vcl.Menus;
+
+  Vcl.Menus;
 
 { TDFFWizard }
-
-  //TODO: Should register the frame, so it can be saved in the layout
   //TODO: Should add a menu item, with a settings wheel, so people can change the hotkey
 
 procedure TDFFWizard.BindKeyboard(
   const BindingServices: IOTAKeyBindingServices);
 begin
-  BindingServices.AddKeyBinding([ShortCut(Ord('T'), [ssCtrl])], ShowForm, nil, 0, '', 'Nogen file finder');
+  BindingServices.AddKeyBinding([TextToShortCut('Ctrl+T')], ShowForm, nil, kfImplicitShift, '', '');
 end;
 
 constructor TDFFWizard.Create;
 begin
-  FFilesIndexingThread := TFilesIndexingThread.Create(DoNewFilesIndexed);
-  FFilesIndexingThread.Start;
+  RegisterServices;
+  FIndexThread := GlobalContainer.Resolve<TFileIndexThread>;
 end;
 
-procedure TDFFWizard.DoNewFilesIndexed(aFiles: TList<string>);
+destructor TDFFWizard.Destroy;
 begin
-  if Assigned(FForm) then
-    FForm.Frame.SetFiles(aFiles);
+  FIndexThread.Terminate;
+  FreeAndNil(FIndexThread);
+  inherited;
 end;
 
 procedure TDFFWizard.Execute;
@@ -79,7 +80,7 @@ end;
 
 function TDFFWizard.GetDisplayName: string;
 begin
-  Result := GetName;
+  Result := 'nogen, Delphi File finder';
 end;
 
 function TDFFWizard.GetIDString: string;
@@ -89,7 +90,7 @@ end;
 
 function TDFFWizard.GetName: string;
 begin
-  Result := 'Nogen wizard';
+  Result := 'nogen.DFF';
 end;
 
 function TDFFWizard.GetState: TWizardState;
@@ -106,11 +107,12 @@ begin
   if Supports(BorlandIDEServices, INTAServices, lNTAServices) then
   begin
     if not Assigned(FForm) then
-    begin
       FForm := TfrmDFFFiles.Create(nil);
-      lNTAServices.CreateDockableForm(FForm);
-    end;
+
+    lNTAServices.CreateDockableForm(FForm);
   end;
+
+  BindingResult := TKeyBindingResult.krHandled;
 end;
 
 end.

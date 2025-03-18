@@ -3,43 +3,27 @@ unit DLLEntry;
 interface
 
 uses
-  SysUtils, ToolsAPI, DFFWizard, System.Classes, Winapi.Windows, vcl.Graphics;
+  SysUtils, ToolsAPI, DFFWizard;
 
 function InitWizard(const BorlandIDEServices: IBorlandIDEServices;
   RegisterProc: TWizardRegisterProc; var Terminate: TWizardTerminateProc): Boolean; stdcall;
-
-
 exports
   InitWizard name WizardEntryPoint;
 
 implementation
 
-const
-  InvalidIndex = -1;
-
-
 var
-  FWizardIndex: Integer = InvalidIndex;
-
-procedure AddSplashScreenInfo;
-begin
-  if Assigned(SplashScreenServices) then
-  begin
-    var lIcon := LoadBitmap(HInstance, 'nogen_SplashScreen_icon');
-
-    SplashScreenServices.AddProductBitmap('nogen V1.0', lIcon);
-  end;
-end;
+  WizardIndex: Integer;
 
 procedure FinalizeWizard;
 var
   WizardServices: IOTAWizardServices;
 begin
-  if FWizardIndex <> InvalidIndex then
+  if (WizardIndex >= 0) then
   begin
     WizardServices := BorlandIDEServices as IOTAWizardServices;
-    WizardServices.RemoveWizard(FWizardIndex);
-    FWizardIndex := InvalidIndex;
+    WizardServices.RemoveWizard(WizardIndex);
+    WizardIndex := 0;
   end;
 end;
 
@@ -65,16 +49,14 @@ begin
     Terminate := FinalizeWizard;
     WizardServices := BorlandIDEServices as IOTAWizardServices;
     Assert(Assigned(WizardServices));
+
     DFFWiz := TDFFWizard.Create;
 
     RegisterKeyBinds(BorlandIDEServices, DFFWiz);
 
-    FWizardIndex := WizardServices.AddWizard(DFFWiz as IOTAWizard);
-    Result := (FWizardIndex >= 0);
+    WizardIndex := WizardServices.AddWizard(DFFWiz as IOTAWizard);
+    Result := (WizardIndex >= 0);
   end;
 end;
-
-initialization
-  AddSplashScreenInfo;
 
 end.

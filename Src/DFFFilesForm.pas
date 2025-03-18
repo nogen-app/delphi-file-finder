@@ -3,9 +3,9 @@ unit DFFFilesForm;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
-  Vcl.Samples.Spin, Vcl.FileCtrl, ToolsAPI,
+  System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls,
+  ToolsAPI,
   DockableForm, FilesFrame;
 
 type
@@ -23,9 +23,6 @@ type
   end;
 
 implementation
-
-uses
-  FuzzySearch;
 
 {$R *.dfm}
 
